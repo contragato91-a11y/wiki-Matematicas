@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wiki · Taller de Ecuaciones y Funciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff5fa; --card:#ffffff; --ink:#241226; --muted:#8a7092; --line:#f4d9ea;
+  --pink:#ff2d78; --pink-soft:#ffe1ee; --violet:#6d28d9; --violet-soft:#ece3fd;
+  --teal:#0891b2; --teal-soft:#dbf3f8; --amber:#e08a00; --amber-soft:#fdecc8;
+  --coral:#e0396b; --coral-soft:#fde2ea;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--bg:#1c1120;--card:#271a2d;--ink:#f7e8f3;--muted:#c6a9c9;--line:#3a2440;
+    --pink-soft:#3a1a2c; --violet-soft:#2b2145; --teal-soft:#122f38; --amber-soft:#3a2c10; --coral-soft:#3a1826;}
+}
+:root[data-theme="dark"]{--bg:#1c1120;--card:#271a2d;--ink:#f7e8f3;--muted:#c6a9c9;--line:#3a2440;
+  --pink-soft:#3a1a2c; --violet-soft:#2b2145; --teal-soft:#122f38; --amber-soft:#3a2c10; --coral-soft:#3a1826;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:18px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.65;
+  background-image:
+    radial-gradient(circle at 8% 6%, var(--pink-soft) 0%, transparent 38%),
+    radial-gradient(circle at 96% 18%, var(--teal-soft) 0%, transparent 36%),
+    radial-gradient(circle at 90% 92%, var(--violet-soft) 0%, transparent 40%);
+  background-attachment:fixed;}
+h1,h2,h3{font-family:Fraunces,serif;margin:0 0 .4em;letter-spacing:-.01em}
+p{margin:0 0 12px}
+a{color:var(--pink)}
+.katex-ish{font-style:italic}
+
+#menuBtn{display:none;position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:14px;z-index:60;
+  background:linear-gradient(135deg,var(--pink),var(--violet));color:#fff;border:none;width:46px;height:46px;
+  border-radius:50%;font-size:1.2rem;box-shadow:0 4px 14px rgba(109,40,217,.35);}
+#overlay{display:none;position:fixed;inset:0;background:rgba(30,10,25,.45);z-index:45;}
+
+#sidebar{position:fixed;top:0;left:0;height:100dvh;width:250px;overflow-y:auto;z-index:50;
+  background:linear-gradient(200deg,var(--pink) 0%,var(--violet) 65%,var(--teal) 135%);color:#fff;
+  padding:22px 14px calc(22px + env(safe-area-inset-bottom,0px));
+  padding-top:calc(22px + env(safe-area-inset-top,0px)); transition:transform .25s;}
+#sidebar .brand{font-family:Fraunces,serif;font-size:1.15rem;font-weight:700;margin-bottom:2px}
+#sidebar .brand small{display:block;font-family:Inter,sans-serif;font-weight:500;font-size:.72rem;opacity:.85;margin-top:2px}
+#sidebar nav{margin-top:18px;display:flex;flex-direction:column;gap:2px}
+#sidebar a{color:#fff;text-decoration:none;font-size:.82rem;font-weight:600;padding:8px 10px;border-radius:10px;opacity:.9}
+#sidebar a:hover{background:rgba(255,255,255,.16)}
+#sidebar a.active{background:rgba(255,255,255,.28)}
+#sidebar .grp{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;opacity:.7;margin:14px 10px 4px}
+
+#content{margin-left:250px}
+header.hero{padding:52px 26px 40px;text-align:center;position:relative;overflow:hidden}
+header.hero .sym{position:absolute;font-family:Fraunces,serif;color:var(--pink);opacity:.13;font-size:3.4rem;user-select:none}
+header.hero h1{font-size:2.1rem;color:var(--violet)}
+header.hero p.lead{max-width:640px;margin:10px auto 0;color:var(--muted);font-size:.98rem}
+
+main{max-width:880px;margin:0 auto;padding:8px 20px 70px}
+
+section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 24px;margin-bottom:22px;
+  border-left:7px solid var(--pink); box-shadow:0 4px 18px rgba(109,40,217,.06);}
+section.v{border-left-color:var(--violet)}
+section.t{border-left-color:var(--teal)}
+section.a{border-left-color:var(--amber)}
+section.c{border-left-color:var(--coral)}
+
+.eyebrow{display:inline-block;font-size:.72rem;font-weight:700;color:#fff;padding:3px 12px;border-radius:20px;margin-bottom:10px}
+.eyebrow.p{background:var(--pink)} .eyebrow.v{background:var(--violet)} .eyebrow.t{background:var(--teal)}
+.eyebrow.a{background:var(--amber)} .eyebrow.c{background:var(--coral)}
+
+h2{font-size:1.35rem;color:var(--ink)}
+section.v h2{color:var(--violet)} section.t h2{color:var(--teal)} section.a h2{color:var(--amber)} section.c h2{color:var(--coral)}
+h3{font-size:1.02rem;margin-top:18px}
+.formula{background:var(--bg);border:1px dashed var(--line);border-radius:10px;padding:10px 14px;margin:10px 0;
+  font-family:Fraunces,serif;font-size:1.05rem;font-weight:600;color:var(--ink)}
+.step{margin:4px 0;font-family:Fraunces,serif;font-size:.98rem}
+.answer{background:var(--pink-soft);border-radius:12px;padding:12px 16px;margin-top:14px;font-size:.94rem}
+section.v .answer{background:var(--violet-soft)} section.t .answer{background:var(--teal-soft)}
+section.a .answer{background:var(--amber-soft)} section.c .answer{background:var(--coral-soft)}
+
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.85rem}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:center}
+th{background:var(--pink);color:#fff}
+section.v th{background:var(--violet)} section.t th{background:var(--teal)}
+section.a th{background:var(--amber)} section.c th{background:var(--coral)}
+caption{caption-side:bottom;font-size:.78rem;color:var(--muted);padding-top:4px;text-align:left}
+
+.chartwrap{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px 10px 6px;margin:14px 0}
+.chart-inner{position:relative;height:260px;width:100%}
+.chart-inner canvas{position:absolute;left:0;top:0;width:100%!important;height:100%!important}
+.chartcap{font-size:.78rem;color:var(--muted);text-align:center;margin-top:4px}
+
+.bilingual{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:680px){.bilingual{grid-template-columns:1fr}}
+.bilingual .col h4{margin:0 0 6px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+
+.videolink{display:inline-flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);
+  border-radius:12px;padding:9px 14px;text-decoration:none;color:var(--ink);font-size:.85rem;font-weight:600;margin-top:8px}
+.videolink svg{width:16px;height:16px;fill:var(--pink)}
+.videolink:hover{background:var(--pink-soft)}
+
+.refs li{margin-bottom:12px;font-size:.88rem;color:var(--ink)}
+.refs .ai{background:var(--violet-soft);border-radius:10px;padding:8px 12px;list-style:none;margin-top:14px}
+
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:24px}
+sup{font-size:.7em}
+</style>
+</head>
+<body>
+
+<button id="menuBtn" onclick="toggleSidebar()">☰</button>
+<div id="overlay" onclick="toggleSidebar()"></div>
+
+<aside id="sidebar">
+  <div class="brand">∫ Wiki Matemática<small>Taller de ecuaciones y funciones</small></div>
+  <nav>
+    <a href="#intro">Introducción</a>
+    <div class="grp">Ejercicios</div>
+    <a href="#ej1">1. Calorías y proteínas</a>
+    <a href="#ej2">2. Ciclista</a>
+    <a href="#ej3">3. Pelota de baloncesto</a>
+    <a href="#ej4">4. Consumo de oxígeno</a>
+    <a href="#ej5">5. Propagación de un virus</a>
+    <div class="grp">Teoría</div>
+    <a href="#t-sistemas">Sistema de ec. lineales</a>
+    <a href="#t-progresion">Progresión</a>
+    <a href="#t-distancia">Función de distancia</a>
+    <a href="#t-cuadratica">Función cuadrática</a>
+    <a href="#t-logaritmica">Función logarítmica</a>
+    <a href="#t-exponencial">Función exponencial</a>
+    <div class="grp">Cierre</div>
+    <a href="#conclusiones">Conclusiones</a>
+    <a href="#referencias">Referencias</a>
+  </nav>
+</aside>
+
+<div id="content">
+<header class="hero">
+  <span class="sym" style="top:10px;left:6%">∑</span>
+  <span class="sym" style="top:60px;right:8%">√x</span>
+  <span class="sym" style="bottom:10px;left:14%">π</span>
+  <span class="sym" style="bottom:20px;right:16%">ƒ(x)</span>
+  <h1>Taller de Ecuaciones y Funciones</h1>
+  <p class="lead">Las ecuaciones y funciones matemáticas permiten representar diferentes situaciones de la vida cotidiana mediante relaciones entre cantidades. En este taller se presentan ejemplos relacionados con alimentación, deporte, movimiento, lanzamiento de objetos, consumo de oxígeno y propagación de un virus.</p>
+</header>
+
+<main>
+
+<section id="intro">
+  <span class="eyebrow p">Introducción</span>
+  <h2>Cómo se aborda cada situación</h2>
+  <p>Para resolver cada situación se identifica inicialmente el tipo de ecuación o función que corresponde, posteriormente se reemplazan los datos conocidos y se realizan las operaciones necesarias hasta obtener el resultado. Finalmente, se explica el significado del resultado obtenido y se propone el material visual o audiovisual que puede utilizarse para representar cada concepto.</p>
+</section>
+
+<!-- EJERCICIO 1 -->
+<section id="ej1">
+  <span class="eyebrow p">Ejercicio 1</span>
+  <h2>Consumo diario de calorías y proteínas</h2>
+  <h3>Planteamiento</h3>
+  <p>Un atleta necesita consumir 2000 calorías y 60 gramos de proteína al día. Tiene disponibles dos alimentos:</p>
+  <ul>
+    <li>Alimento A: 100 calorías y 5 gramos de proteína por porción.</li>
+    <li>Alimento B: 200 calorías y 10 gramos de proteína por porción.</li>
+  </ul>
+  <p>Se desea determinar cuántas porciones de cada alimento debe consumir.</p>
+  <h3>Tipo de ecuación utilizada</h3>
+  <p>Para este problema se utiliza un <strong>sistema de ecuaciones lineales con dos incógnitas</strong>.</p>
+  <p>Definimos: x = número de porciones del alimento A. y = número de porciones del alimento B.</p>
+  <p>La primera ecuación representa las calorías; la segunda representa las proteínas. El sistema es:</p>
+  <div class="formula">100x + 200y = 2000<br>5x + 10y = 60</div>
+  <h3>Desarrollo</h3>
+  <p class="step">Simplificamos la primera ecuación dividiendo entre 100: x + 2y = 20</p>
+  <p class="step">Simplificamos la segunda ecuación dividiendo entre 5: x + 2y = 12</p>
+  <p>Al observar las dos ecuaciones se puede notar que tienen exactamente el mismo lado izquierdo, pero diferentes resultados. Restando ambas ecuaciones:</p>
+  <div class="formula">(x + 2y) − (x + 2y) = 20 − 12 → 0 = 8</div>
+  <p>Esta afirmación es imposible.</p>
+  <div class="answer"><strong>Respuesta:</strong> con los datos proporcionados en el problema <strong>no existe una combinación de porciones de los alimentos A y B</strong> que permita satisfacer simultáneamente las necesidades de 2000 calorías y 60 gramos de proteína. Esto sucede porque ambos alimentos tienen exactamente la misma relación entre calorías y proteína: 100/5 = 20 y 200/10 = 20 calorías por gramo de proteína. Si se consumen 2000 calorías, la proteína correspondiente sería 2000/20 = 100 gramos, y no 60 gramos.</div>
+  <table>
+    <tr><th>x</th><th>y1 = 10 − 0,5x</th><th>y2 = 6 − 0,5x</th></tr>
+    <tr><td>0</td><td>10</td><td>6</td></tr>
+    <tr><td>2</td><td>9</td><td>5</td></tr>
+    <tr><td>4</td><td>8</td><td>4</td></tr>
+    <tr><td>6</td><td>7</td><td>3</td></tr>
+    <tr><td>8</td><td>6</td><td>2</td></tr>
+    <tr><td>10</td><td>5</td><td>1</td></tr>
+    <tr><td>12</td><td>4</td><td>0</td></tr>
+    <tr><td>14</td><td>3</td><td>−1</td></tr>
+    <tr><td>16</td><td>2</td><td>−2</td></tr>
+    <tr><td>18</td><td>1</td><td>−3</td></tr>
+    <tr><td>20</td><td>0</td><td>−4</td></tr>
+    <caption>Tabla 1. Consumo de calorías y proteínas</caption>
+  </table>
+  <div class="chartwrap"><div class="chart-inner"><canvas id="chart1"></canvas></div><div class="chartcap">Gráfico 1. Consumo diario de calorías y proteínas — las rectas son paralelas, por lo que el sistema no tiene solución.</div></div>
+  <h3>Conclusión del ejercicio</h3>
+  <p>El sistema de ecuaciones es <strong>incompatible o inconsistente</strong>, por lo que no tiene solución.</p>
+</section>
+
+<!-- EJERCICIO 2 -->
+<section id="ej2" class="v">
+  <span class="eyebrow v">Ejercicio 2</span>
+  <h2>Distancia recorrida por el ciclista</h2>
+  <h3>Planteamiento</h3>
+  <p>Un ciclista recorre 10 km durante la primera hora. En cada hora siguiente aumenta su velocidad en 2 km/h. Se pregunta: a) ¿Qué distancia recorre durante la quinta hora? b) ¿Cuál es la función que representa la distancia recorrida en función del tiempo?</p>
+  <h3>Tipo de ecuación utilizada</h3>
+  <p>En este caso se utiliza una <strong>sucesión aritmética</strong>, porque la distancia recorrida por hora aumenta siempre en 2 km. Las velocidades por hora son: primera hora 10 km/h, segunda hora 12 km/h, tercera hora 14 km/h, cuarta hora 16 km/h, quinta hora 18 km/h.</p>
+  <h3>Desarrollo</h3>
+  <p>Como durante la quinta hora la velocidad es de 18 km/h y esa hora dura una hora: Distancia = velocidad × tiempo = 18 × 1 = 18 km.</p>
+  <div class="answer"><strong>Respuesta a la primera pregunta:</strong> el ciclista recorre <strong>18 kilómetros durante la quinta hora</strong>.</div>
+  <h3>Función de la distancia</h3>
+  <p>Si t representa el número de horas, la velocidad correspondiente a cada hora puede expresarse como v(t) = 10 + 2(t − 1), es decir, v(t) = 2t + 8.</p>
+  <p>La suma de los primeros t términos de una sucesión aritmética es D(t) = t/2 [2a₁ + (t − 1)d], donde a₁ = 10 y d = 2:</p>
+  <p class="step">D(t) = t/2 [2(10) + (t − 1)(2)] = t/2 [20 + 2t − 2] = t/2 (2t + 18) = t(t + 9)</p>
+  <div class="formula">D(t) = t² + 9t</div>
+  <h3>Comprobación</h3>
+  <p>Para t = 5: D(5) = 5² + 9(5) = 25 + 45 = 70 km. Esto significa que al finalizar la quinta hora ha recorrido un total de 70 km.</p>
+  <table>
+    <tr><th>Tiempo (h)</th><th>Distancia acumulada (km)</th></tr>
+    <tr><td>0</td><td>0</td></tr><tr><td>1</td><td>10</td></tr><tr><td>2</td><td>22</td></tr>
+    <tr><td>3</td><td>36</td></tr><tr><td>4</td><td>52</td></tr><tr><td>5</td><td>70</td></tr>
+    <caption>Tabla 2. Distancia acumulada del ciclista</caption>
+  </table>
+  <div class="chartwrap"><div class="chart-inner"><canvas id="chart2"></canvas></div><div class="chartcap">Gráfico 2. Distancia acumulada del ciclista</div></div>
+  <div class="answer"><strong>Respuesta:</strong> la distancia recorrida durante la quinta hora es <strong>18 km</strong> y la función que representa la distancia acumulada después de t horas es <strong>D(t) = t² + 9t</strong>.</div>
+</section>
+
+<!-- EJERCICIO 3 -->
+<section id="ej3" class="t">
+  <span class="eyebrow t">Ejercicio 3</span>
+  <h2>Altura máxima de una pelota de baloncesto</h2>
+  <h3>Planteamiento</h3>
+  <p>La altura de una pelota se representa mediante la función h(t) = −4.9t² + 2t + 2, donde t es el tiempo en segundos y h(t) la altura en metros. Se desea determinar el momento en que la pelota alcanza su altura máxima y cuál es dicha altura.</p>
+  <h3>Tipo de función utilizada</h3>
+  <p>Se trata de una <strong>función cuadrática</strong>, cuya representación gráfica es una parábola: f(x) = ax² + bx + c, con a = −4.9, b = 2, c = 2. Como el valor de a es negativo, la parábola se abre hacia abajo, por lo que el vértice representa el punto de altura máxima.</p>
+  <h3>Desarrollo</h3>
+  <p>Para encontrar el tiempo en que se alcanza la altura máxima utilizamos la fórmula del vértice t = −b / 2a:</p>
+  <p class="step">t = −2 / [2(−4.9)] = −2 / −9.8 = 0.2041 segundos aproximadamente.</p>
+  <p>Por lo tanto, la pelota alcanza su altura máxima aproximadamente a los <strong>0.20 segundos</strong>. Ahora calculamos la altura:</p>
+  <p class="step">h(0.2041) = −4.9(0.2041)² + 2(0.2041) + 2 ≈ −0.2041 + 0.4082 + 2 ≈ 2.2041 metros.</p>
+  <table>
+    <tr><th>Tiempo (s)</th><th>Altura (m)</th></tr>
+    <tr><td>0</td><td>2</td></tr><tr><td>0,05</td><td>2,08775</td></tr><tr><td>0,1</td><td>2,151</td></tr>
+    <tr><td>0,15</td><td>2,18975</td></tr><tr><td>0,2</td><td>2,204</td></tr><tr><td>0,204</td><td>2,2040816</td></tr>
+    <tr><td>0,25</td><td>2,19375</td></tr><tr><td>0,3</td><td>2,159</td></tr><tr><td>0,35</td><td>2,09975</td></tr>
+    <tr><td>0,4</td><td>2,016</td></tr><tr><td>0,45</td><td>1,90775</td></tr><tr><td>0,5</td><td>1,775</td></tr>
+    <tr><td>0,55</td><td>1,61775</td></tr><tr><td>0,6</td><td>1,436</td></tr><tr><td>0,65</td><td>1,22975</td></tr>
+    <tr><td>0,7</td><td>0,999</td></tr><tr><td>0,75</td><td>0,74375</td></tr><tr><td>0,8</td><td>0,464</td></tr>
+    <tr><td>0,85</td><td>0,15975</td></tr>
+    <caption>Tabla 3. Altura de la pelota</caption>
+  </table>
+  <div class="chartwrap"><div class="chart-inner"><canvas id="chart3"></canvas></div><div class="chartcap">Gráfico 3. Altura de la pelota</div></div>
+  <div class="answer"><strong>Respuesta:</strong> la pelota alcanza su altura máxima aproximadamente a los <strong>0.20 segundos</strong> después del lanzamiento. La altura máxima es aproximadamente de <strong>2.20 metros</strong>.</div>
+</section>
+
+<!-- EJERCICIO 4 -->
+<section id="ej4" class="a">
+  <span class="eyebrow a">Ejercicio 4</span>
+  <h2>Consumo de oxígeno durante el entrenamiento</h2>
+  <h3>Planteamiento</h3>
+  <p>El consumo de oxígeno de una persona durante el entrenamiento está representado por f(t) = 2log(t) + 1, donde t representa el tiempo en minutos. Se desea determinar cuánto tiempo debe entrenar para alcanzar un consumo de oxígeno de 5 unidades.</p>
+  <h3>Tipo de función utilizada</h3>
+  <p>En este caso se utiliza una <strong>función logarítmica</strong>. Las funciones logarítmicas permiten encontrar un exponente desconocido y son la operación inversa de las funciones exponenciales. Se plantea: 2log(t) + 1 = 5</p>
+  <h3>Desarrollo</h3>
+  <p class="step">Restamos 1 en ambos lados: 2log(t) = 4</p>
+  <p class="step">Dividimos entre 2: log(t) = 2</p>
+  <p class="step">Utilizando la definición del logaritmo, log(t) = 2 significa t = 10², por lo tanto t = 100.</p>
+  <table>
+    <tr><th>Tiempo (min)</th><th>Consumo de oxígeno</th></tr>
+    <tr><td>1</td><td>1</td></tr><tr><td>2</td><td>1,602059991</td></tr><tr><td>5</td><td>2,397940009</td></tr>
+    <tr><td>10</td><td>3</td></tr><tr><td>20</td><td>3,602059991</td></tr><tr><td>30</td><td>3,954242509</td></tr>
+    <tr><td>40</td><td>4,204119983</td></tr><tr><td>50</td><td>4,397940009</td></tr><tr><td>60</td><td>4,556302501</td></tr>
+    <tr><td>70</td><td>4,69019608</td></tr><tr><td>80</td><td>4,806179974</td></tr><tr><td>90</td><td>4,908485019</td></tr>
+    <tr><td>100</td><td>5</td></tr><tr><td>110</td><td>5,08278537</td></tr><tr><td>120</td><td>5,158362492</td></tr>
+    <tr><td>130</td><td>5,227886705</td></tr><tr><td>140</td><td>5,292256071</td></tr><tr><td>150</td><td>5,352182518</td></tr>
+    <caption>Tabla 4. Consumo de oxígeno durante el entrenamiento</caption>
+  </table>
+  <div class="chartwrap"><div class="chart-inner"><canvas id="chart4"></canvas></div><div class="chartcap">Gráfico 4. Consumo de oxígeno durante el entrenamiento</div></div>
+  <div class="answer"><strong>Respuesta:</strong> la persona debe entrenar durante <strong>100 minutos</strong>, es decir, aproximadamente <strong>1 hora y 40 minutos</strong>, para alcanzar un consumo de oxígeno de 5 unidades.</div>
+  <p><em>Nota: se interpreta "log" como logaritmo en base 10, que es la convención utilizada normalmente cuando no se especifica otra base.</em></p>
+</section>
+
+<!-- EJERCICIO 5 -->
+<section id="ej5" class="c">
+  <span class="eyebrow c">Ejercicio 5</span>
+  <h2>Propagación de un virus</h2>
+  <h3>Planteamiento</h3>
+  <p>La cantidad de personas infectadas se representa mediante N(t) = 100e^0.05t, donde N(t) es la cantidad de personas infectadas y t el tiempo en días. Se desea conocer la cantidad de personas infectadas después de 10 días.</p>
+  <h3>Tipo de función utilizada</h3>
+  <p>Se utiliza una <strong>función exponencial</strong>, porque la cantidad de personas aumenta de acuerdo con una tasa proporcional al número existente.</p>
+  <h3>Desarrollo</h3>
+  <p class="step">N(10) = 100e^(0.05)(10) = 100e^0.5</p>
+  <p class="step">Sabemos que e^0.5 ≈ 1.6487, entonces N(10) = 100(1.6487) ≈ 164.87</p>
+  <p>Como estamos hablando de personas, podemos aproximar al número entero más cercano: N(10) ≈ 165 personas.</p>
+  <table>
+    <tr><th>Día</th><th>Personas infectadas</th></tr>
+    <tr><td>0</td><td>100</td></tr><tr><td>1</td><td>105,1271096</td></tr><tr><td>2</td><td>110,5170918</td></tr>
+    <tr><td>3</td><td>116,1834243</td></tr><tr><td>4</td><td>122,1402758</td></tr><tr><td>5</td><td>128,4025417</td></tr>
+    <tr><td>6</td><td>134,9858808</td></tr><tr><td>7</td><td>141,9067549</td></tr><tr><td>8</td><td>149,1824698</td></tr>
+    <tr><td>9</td><td>156,8312185</td></tr><tr><td>10</td><td>164,8721271</td></tr>
+    <caption>Tabla 5. Propagación de un virus</caption>
+  </table>
+  <div class="chartwrap"><div class="chart-inner"><canvas id="chart5"></canvas></div><div class="chartcap">Gráfico 5. Propagación de un virus</div></div>
+  <div class="answer"><strong>Respuesta:</strong> después de 10 días habría aproximadamente <strong>165 personas infectadas</strong>, de acuerdo con el modelo matemático planteado. Es importante aclarar que este resultado corresponde al modelo exponencial propuesto y no significa necesariamente que una situación real vaya a comportarse exactamente de esa manera.</p></div>
+</section>
+
+<!-- TEORÍA -->
+<section id="t-sistemas">
+  <span class="eyebrow p">Teoría</span>
+  <h2>Sistema de Ecuaciones Lineales</h2>
+  <div class="bilingual">
+    <div class="col">
+      <h4>Teoría en español</h4>
+      <p>Un sistema de ecuaciones lineales está formado por dos o más ecuaciones que tienen las mismas variables. Su objetivo es encontrar los valores de las variables que hacen verdaderas todas las ecuaciones al mismo tiempo. En un sistema de dos ecuaciones con dos incógnitas, la solución puede representarse como un punto de intersección entre dos rectas.</p>
+      <div class="formula">a₁x + b₁y = c₁<br>a₂x + b₂y = c₂</div>
+      <h4>Ejemplo resuelto</h4>
+      <p>Resolver: X + Y = 10 ; 2X + Y = 15. Restamos la primera ecuación de la segunda: (2X+Y) − (X+Y) = 15 − 10 → X = 5. Reemplazamos X = 5 en la primera ecuación: 5 + Y = 10 → Y = 5.</p>
+      <div class="answer"><strong>Respuesta:</strong> X = 5, Y = 5</div>
+    </div>
+    <div class="col">
+      <h4>Theory in English</h4>
+      <p>A system of linear equations consists of two or more equations that have the same variables. The purpose is to find the values of the variables that satisfy all the equations at the same time. In a system of two equations with two unknowns, the solution can be represented as the intersection point of two lines.</p>
+      <div class="formula">a₁x + b₁y = c₁<br>a₂x + b₂y = c₂</div>
+      <h4>Ejemplo</h4>
+      <p>x + y = 10<br>2x + y = 15<br>Solución: x = 5, y = 5.</p>
+      <a class="videolink" href="https://www.youtube.com/watch?v=3FHhPLVUt9o" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Julioprofe: sistema de ecuaciones lineales 2×2 por sustitución</a>
+    </div>
+  </div>
+  <div class="chartwrap"><div class="chart-inner"><canvas id="chartSist"></canvas></div><div class="chartcap">Intersección de las rectas x + y = 10 y 2x + y = 15 en el punto (5, 5)</div></div>
+</section>
+
+<section id="t-progresion" class="v">
+  <span class="eyebrow v">Teoría</span>
+  <h2>Progresión</h2>
+  <p>Una <strong>progresión</strong> es una sucesión ordenada de números que sigue una determinada regla.</p>
+  <div class="bilingual">
+    <div class="col">
+      <h4>Progresión aritmética</h4>
+      <p>Es una sucesión en la que cada término se obtiene sumando o restando siempre la misma cantidad al término anterior. Esa cantidad constante se llama diferencia común (d).</p>
+      <div class="formula">a<sub>n</sub> = a<sub>1</sub> + (n − 1)d</div>
+      <p>Donde a<sub>n</sub> = término que queremos encontrar; a<sub>1</sub> = primer término; n = posición del término; d = diferencia común.</p>
+      <p><strong>Ejemplo:</strong> 10, 12, 14, 16, 18 → a₁ = 10, d = 2. Por lo tanto, cada hora la distancia aumenta en 2 km.</p>
+    </div>
+    <div class="col">
+      <h4>Arithmetic progression</h4>
+      <p>This is a sequence in which each term is obtained by always adding or subtracting the same amount from the previous term. This constant amount is called the common difference (d).</p>
+      <div class="formula">a<sub>n</sub> = a<sub>1</sub> + (n − 1)d</div>
+      <p>Where a<sub>n</sub> = term we want to find; a<sub>1</sub> = first term; n = term position; d = common difference.</p>
+      <p><strong>Example:</strong> 10, 12, 14, 16, 18. In this case a₁ = 10, d = 2. Therefore, the distance increases by 2 km every hour.</p>
+      <a class="videolink" href="https://www.youtube.com/watch?v=VvOoYZj_OiE" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Progresión Aritmética | Introducción</a>
+    </div>
+  </div>
+  <div class="chartwrap"><div class="chart-inner"><canvas id="chartProg"></canvas></div><div class="chartcap">Progresión aritmética 10, 12, 14, 16, 18 (a₁ = 10, d = 2)</div></div>
+</section>
+
+<section id="t-distancia" class="t">
+  <span class="eyebrow t">Teoría</span>
+  <h2>Función de distancia</h2>
+  <div class="bilingual">
+    <div class="col">
+      <h4>Teoría en español</h4>
+      <p>Una función de distancia representa matemáticamente la relación entre el tiempo transcurrido y la distancia recorrida por un objeto. Generalmente se expresa como:</p>
+      <div class="formula">d = f(t)</div>
+      <p>Donde d = distancia recorrida; t = tiempo; f(t) = función que permite calcular la distancia para un determinado tiempo. La función permite saber cuánto ha recorrido un objeto después de cierto tiempo.</p>
+      <p><strong>Ejemplo función de distancia:</strong> un carro viaja a 60 km/h. La función de distancia es:</p>
+      <div class="formula">d(t) = 60t</div>
+      <p>Donde t es el tiempo en horas y d(t) la distancia en kilómetros. Por ejemplo, en 3 horas: d(3) = 60(3) = 180 km.</p>
+      <div class="answer"><strong>Respuesta:</strong> en 3 horas recorre <strong>180 km</strong>.</div>
+      <div class="chartwrap"><div class="chart-inner"><canvas id="chartDist"></canvas></div><div class="chartcap">Función de distancia d(t) = 60t</div></div>
+    </div>
+    <div class="col">
+      <h4>Theory in English</h4>
+      <p>A distance function mathematically represents the relationship between elapsed time and the distance traveled by an object. It is generally expressed as:</p>
+      <div class="formula">d = f(t)</div>
+      <p>Where d = distance traveled; t = time; f(t) = function that allows us to calculate the distance for a given time. The function allows us to know how far an object has traveled after a certain time.</p>
+      <p><strong>Example of a distance function:</strong> a car travels at 60 km/h. The distance function is:</p>
+      <div class="formula">d(t) = 60t</div>
+      <p>Where t is the time in hours and d(t) is the distance in kilometers. For example, in 3 hours: d(3) = 60(3) = 180 km.</p>
+      <div class="answer"><strong>Answer:</strong> in 3 hours, it travels <strong>180 km</strong>.</div>
+      <a class="videolink" href="https://www.youtube.com/watch?v=Igkez5karUs" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Distancia de un punto a una recta</a>
+    </div>
+  </div>
+</section>
+
+<section id="t-cuadratica" class="a">
+  <span class="eyebrow a">Teoría</span>
+  <h2>Función Cuadrática</h2>
+  <div class="bilingual">
+    <div class="col">
+      <h4>Teoría en español</h4>
+      <p>Una función cuadrática es una función de segundo grado que tiene la forma f(x) = ax² + bx + c, donde a, b y c son números reales y a es diferente de cero. Su representación gráfica es una parábola. Cuando a es positivo, la parábola abre hacia arriba; cuando a es negativo, abre hacia abajo. Entre sus elementos se encuentran el vértice, el eje de simetría y las intersecciones con los ejes.</p>
+      <div class="formula">f(x) = ax² + bx + c</div>
+      <h4>Ejemplo</h4>
+      <p>Tenemos la función f(x) = x² − 4x + 3. Para encontrar las raíces, igualamos la función a cero: x² − 4x + 3 = 0. Factorizamos: (x − 1)(x − 3) = 0. Entonces X = 1 o x = 3. Por lo tanto, las raíces de la función son 1 y 3.</p>
+      <div class="chartwrap"><div class="chart-inner"><canvas id="chartCuad"></canvas></div><div class="chartcap">Parábola f(x) = x² − 4x + 3, con raíces en x = 1 y x = 3</div></div>
+    </div>
+    <div class="col">
+      <h4>Theory in English</h4>
+      <p>A quadratic function is a second-degree function written in the form f(x) = ax² + bx + c, where a, b, and c are real numbers and a is not zero. Its graph is a parabola. When a is positive, the parabola opens upward; when a is negative, it opens downward. Its main elements include the vertex, the axis of symmetry, and the intercepts.</p>
+      <p>Material audiovisual: Julioprofe, "Análisis de funciones cuadráticas". El video muestra el vértice, las intersecciones, el dominio, el rango y la gráfica de una función cuadrática.</p>
+      <a class="videolink" href="https://www.youtube.com/watch?v=-WJ8g4i3GsA" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Análisis de funciones cuadráticas | Ej. 5</a>
+    </div>
+  </div>
+</section>
+
+<section id="t-logaritmica" class="c">
+  <span class="eyebrow c">Teoría</span>
+  <h2>Función Logarítmica</h2>
+  <div class="bilingual">
+    <div class="col">
+      <h4>Teoría en español</h4>
+      <p>Una función logarítmica tiene la forma f(x) = log<sub>b</sub>(x), donde b es mayor que cero y diferente de uno, y x es mayor que cero. El logaritmo permite determinar el exponente al que se debe elevar una base para obtener un número determinado. Por ejemplo, log₂(8) = 3 porque 2³ = 8.</p>
+      <div class="formula">f(x) = log<sub>b</sub>(x)</div>
+      <h4>Ejemplo</h4>
+      <p>Tenemos: Log₂(x) = 3. Recordamos que un logaritmo nos indica el exponente al que debemos elevar la base. Entonces podemos escribir: 2³ = x. Calculamos: 8 = x.</p>
+      <div class="answer"><strong>X = 8</strong></div>
+      <p>Comprobación: Log₂(8) = 3, porque 2³ = 8.</p>
+      <div class="chartwrap"><div class="chart-inner"><canvas id="chartLog"></canvas></div><div class="chartcap">Función f(x) = log₂(x), con el punto (8, 3)</div></div>
+    </div>
+    <div class="col">
+      <h4>Theory in English</h4>
+      <p>A logarithmic function has the form f(x) = log<sub>b</sub>(x), where b is greater than zero and different from one, and x is greater than zero. A logarithm determines the exponent to which a base must be raised to obtain a given number. For example, log₂(8) = 3 because 2³ = 8.</p>
+      <h4>Ejemplo</h4>
+      <p>log₂(8) = 3, because 2³ = 8.</p>
+      <p>Material audiovisual: Julioprofe, "Ecuación con logaritmos". Aunque el video se enfoca en una ecuación logarítmica, sirve como apoyo para observar el manejo de logaritmos y su procedimiento.</p>
+      <a class="videolink" href="https://www.youtube.com/watch?v=rj_PNolMObg" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Ecuación con logaritmos</a>
+    </div>
+  </div>
+</section>
+
+<section id="t-exponencial">
+  <span class="eyebrow p">Teoría</span>
+  <h2>Función Exponencial</h2>
+  <p>Una <strong>función exponencial</strong> es una función matemática de la forma general:</p>
+  <div class="formula">f(x) = a · b<sup>x</sup></div>
+  <p>donde a es una constante real distinta de cero (a ≠ 0), b es la base (un número real positivo diferente de 1, es decir, b &gt; 0 y b ≠ 1), y la variable independiente x se encuentra en el exponente.</p>
+  <div class="bilingual">
+    <div class="col">
+      <h4>Características principales</h4>
+      <ul>
+        <li><strong>Dominio y rango:</strong> el dominio abarca todos los números reales (−∞, ∞), mientras que el rango contiene todos los números reales positivos (0, ∞) cuando a &gt; 0.</li>
+        <li><strong>Intersección con el eje Y:</strong> la gráfica siempre cruza el eje vertical en el punto (0, a). Cuando a = 1, el punto de corte es (0, 1).</li>
+        <li><strong>Comportamiento:</strong> si b &gt; 1, la función representa un crecimiento exponencial. Si 0 &lt; b &lt; 1, representa un decaimiento exponencial.</li>
+        <li><strong>Asíntota:</strong> el eje X (y = 0) actúa como una asíntota horizontal.</li>
+        <li><strong>Función exponencial natural:</strong> caso especial donde la base es el número de Euler (e ≈ 2.71828), expresada como f(x) = e<sup>x</sup>.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>English definition</h4>
+      <p>An exponential function is a mathematical function of the general form f(x) = a·b<sup>x</sup>, where a is a non-zero real constant (a ≠ 0), b is the base (a positive real number other than 1, meaning b &gt; 0 and b ≠ 1), and the independent variable x serves as the exponent.</p>
+      <h4>Key characteristics</h4>
+      <ul>
+        <li><strong>Domain and range:</strong> the domain consists of all real numbers (−∞, ∞), while the range includes all positive real numbers (0, ∞) when a &gt; 0.</li>
+        <li><strong>Y-intercept:</strong> the graph always passes through the y-axis at (0, a). When a = 1, the y-intercept is (0, 1).</li>
+        <li><strong>Behavior:</strong> if b &gt; 1, the function describes exponential growth. If 0 &lt; b &lt; 1, it describes exponential decay.</li>
+        <li><strong>Asymptote:</strong> the x-axis (y = 0) serves as a horizontal asymptote.</li>
+        <li><strong>Natural exponential function:</strong> a special case where the base is Euler's number (e ≈ 2.71828), written as f(x) = e<sup>x</sup>.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="chartwrap"><div class="chart-inner"><canvas id="chartExp"></canvas></div><div class="chartcap">Ejemplo de crecimiento exponencial f(x) = 2ˣ</div></div>
+</section>
+
+<section id="conclusiones" class="v">
+  <span class="eyebrow v">Cierre</span>
+  <h2>Conclusiones</h2>
+  <p>El desarrollo de los ejercicios permitió aplicar diferentes conceptos matemáticos a situaciones relacionadas con la vida cotidiana. Cada problema requiere identificar primero el tipo de ecuación o función que mejor representa la situación para posteriormente aplicar el procedimiento correspondiente.</p>
+  <p>En el primer ejercicio se encontró un sistema de ecuaciones lineales sin solución, debido a que las condiciones de calorías y proteínas son incompatibles con las características de los alimentos disponibles. Esto demuestra la importancia de verificar los resultados y no asumir que todos los sistemas necesariamente tienen una solución.</p>
+  <p>En el segundo ejercicio se aplicó una sucesión aritmética para representar el aumento constante de la velocidad del ciclista. Se determinó que durante la quinta hora recorre 18 kilómetros y que la distancia acumulada puede representarse mediante una función cuadrática.</p>
+  <p>En el tercer ejercicio se utilizó una función cuadrática para determinar el punto máximo de la trayectoria de una pelota. El vértice de la parábola permitió encontrar tanto el momento como la altura máxima.</p>
+  <p>En el cuarto ejercicio se aplicó una función logarítmica, mientras que en el quinto se utilizó una función exponencial. Estos dos conceptos son importantes para representar situaciones en las que existe una relación entre cantidades que no puede describirse adecuadamente mediante una función lineal.</p>
+  <p>Finalmente, el uso de recursos visuales como gráficas, tablas, imágenes y videos permite complementar las operaciones matemáticas y facilita la comprensión de los conceptos trabajados.</p>
+  <p>La función de distancia permite relacionar el tiempo con la distancia que recorre un objeto; podemos calcular fácilmente cuánto se recorre en determinado tiempo. Esto demuestra que las funciones matemáticas son útiles para representar y predecir situaciones de la vida cotidiana, como el movimiento de vehículos, de un ciclista o simplemente un objeto.</p>
+</section>
+
+<section id="referencias" class="refs">
+  <span class="eyebrow p">Fuentes</span>
+  <h2>Referencias bibliográficas</h2>
+  <ul>
+    <li>Matemáticas profe Alex, (29 may 2017) Progresión Aritmética | Introducción [Video] <a href="https://www.youtube.com/watch?v=VvOoYZj_OiE" target="_blank" rel="noopener">https://www.youtube.com/watch?v=VvOoYZj_OiE</a></li>
+    <li>Muzammal Amin, (28 de agosto de 2026), Calcular la distancia, <a href="https://calculatingdistance.com/distance-formula/" target="_blank" rel="noopener">https://calculatingdistance.com/distance-formula/</a></li>
+    <li>Matemáticas profe Alex (Mar 30, 2026), Distancia de un punto a una recta, <a href="https://www.youtube.com/watch?v=Igkez5karUs" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Igkez5karUs</a></li>
+    <li>ProfesorWaldoMarquezGonzález, Progresiones Aritmeticas, <a href="https://www.rmm.cl/sites/default/files/usuarios/mruiz1/doc/progresiones%20aritmeticas.pdf" target="_blank" rel="noopener">https://www.rmm.cl/sites/default/files/usuarios/mruiz1/doc/progresiones%20aritmeticas.pdf</a></li>
+    <li>Julioprofe. (2025, junio 9). Análisis de funciones cuadráticas | Ej. 5 [Video]. YouTube. <a href="https://www.youtube.com/watch?v=-WJ8g4i3GsA" target="_blank" rel="noopener">https://www.youtube.com/watch?v=-WJ8g4i3GsA</a></li>
+    <li>Julioprofe. (2024, julio 30). Ecuación con logaritmos [Video]. YouTube. <a href="https://www.youtube.com/watch?v=rj_PNolMObg" target="_blank" rel="noopener">https://www.youtube.com/watch?v=rj_PNolMObg</a></li>
+    <li class="ai">Anthropic. (2026). <em>Claude (Claude Sonnet 5)</em> [Modelo de lenguaje de gran tamaño] — utilizado como apoyo en el desarrollo de este material. https://claude.ai</li>
+  </ul>
+</section>
+
+</main>
+<footer>Wiki · Taller de Ecuaciones y Funciones</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar'), ov=document.getElementById('overlay');
+  const open = sb.style.transform === 'translateX(0px)';
+  sb.style.transform = open ? 'translateX(-100%)' : 'translateX(0px)';
+  ov.style.display = open ? 'none' : 'block';
+}
+function mq(){
+  const sb=document.getElementById('sidebar'), mb=document.getElementById('menuBtn');
+  if(window.innerWidth < 900){ sb.style.transform='translateX(-100%)'; mb.style.display='flex'; mb.style.alignItems='center'; mb.style.justifyContent='center'; document.getElementById('content').style.marginLeft='0'; }
+  else { sb.style.transform=''; mb.style.display='none'; document.getElementById('overlay').style.display='none'; document.getElementById('content').style.marginLeft='250px'; }
+}
+window.addEventListener('resize', mq); mq();
+
+const links = document.querySelectorAll('#sidebar a');
+const io2 = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      links.forEach(a=>a.classList.remove('active'));
+      const a=document.querySelector('#sidebar a[href="#'+en.target.id+'"]');
+      if(a) a.classList.add('active');
+    }
+  });
+},{rootMargin:'-40% 0px -50% 0px'});
+document.querySelectorAll('section[id]').forEach(s=>io2.observe(s));
+
+function baseOpts(extra){
+  return Object.assign({responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:getComputedStyle(document.body).getPropertyValue('--ink')}}},
+    scales:{x:{ticks:{color:'#8a7092'},grid:{color:'#f4d9ea'}},y:{ticks:{color:'#8a7092'},grid:{color:'#f4d9ea'}}}
+  }, extra||{});
+}
+
+new Chart(document.getElementById('chart1'), {type:'line',
+  data:{labels:[0,2,4,6,8,10,12,14,16,18,20],
+    datasets:[
+      {label:'y1 = 10 − 0,5x',data:[10,9,8,7,6,5,4,3,2,1,0],borderColor:'#ff2d78',backgroundColor:'#ff2d78',tension:0},
+      {label:'y2 = 6 − 0,5x',data:[6,5,4,3,2,1,0,-1,-2,-3,-4],borderColor:'#6d28d9',backgroundColor:'#6d28d9',tension:0}
+    ]}, options: baseOpts()});
+
+new Chart(document.getElementById('chart2'), {type:'line',
+  data:{labels:[0,1,2,3,4,5],
+    datasets:[{label:'Distancia acumulada (km)',data:[0,10,22,36,52,70],borderColor:'#6d28d9',backgroundColor:'#ece3fd',fill:true,tension:.25}]},
+  options: baseOpts()});
+
+new Chart(document.getElementById('chart3'), {type:'line',
+  data:{labels:[0,0.05,0.1,0.15,0.2,0.204,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85],
+    datasets:[{label:'Altura (m)',data:[2,2.08775,2.151,2.18975,2.204,2.2040816,2.19375,2.159,2.09975,2.016,1.90775,1.775,1.61775,1.436,1.22975,0.999,0.74375,0.464,0.15975],
+      borderColor:'#0891b2',backgroundColor:'#dbf3f8',fill:true,tension:.35,pointRadius:2}]},
+  options: baseOpts()});
+
+new Chart(document.getElementById('chart4'), {type:'line',
+  data:{labels:[1,2,5,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150],
+    datasets:[{label:'Consumo de oxígeno',data:[1,1.602059991,2.397940009,3,3.602059991,3.954242509,4.204119983,4.397940009,4.556302501,4.69019608,4.806179974,4.908485019,5,5.08278537,5.158362492,5.227886705,5.292256071,5.352182518],
+      borderColor:'#e08a00',backgroundColor:'#fdecc8',fill:true,tension:.25}]},
+  options: baseOpts()});
+
+new Chart(document.getElementById('chart5'), {type:'line',
+  data:{labels:[0,1,2,3,4,5,6,7,8,9,10],
+    datasets:[{label:'Personas infectadas',data:[100,105.1271096,110.5170918,116.1834243,122.1402758,128.4025417,134.9858808,141.9067549,149.1824698,156.8312185,164.8721271],
+      borderColor:'#e0396b',backgroundColor:'#fde2ea',fill:true,tension:.3}]},
+  options: baseOpts()});
+
+new Chart(document.getElementById('chartSist'), {type:'line',
+  data:{labels:[0,2,4,5,6,8,10],
+    datasets:[
+      {label:'x + y = 10',data:[10,8,6,5,4,2,0],borderColor:'#ff2d78',backgroundColor:'#ff2d78',tension:0,pointRadius:2},
+      {label:'2x + y = 15',data:[15,11,7,5,3,-1,-5],borderColor:'#6d28d9',backgroundColor:'#6d28d9',tension:0,pointRadius:2},
+      {label:'Solución (5, 5)',data:[null,null,null,5,null,null,null],borderColor:'#0891b2',backgroundColor:'#0891b2',pointRadius:7,showLine:false}
+    ]}, options: baseOpts()});
+
+new Chart(document.getElementById('chartProg'), {type:'bar',
+  data:{labels:['a1','a2','a3','a4','a5'],
+    datasets:[{label:'Término de la sucesión',data:[10,12,14,16,18],backgroundColor:'#6d28d9'}]},
+  options: baseOpts()});
+
+new Chart(document.getElementById('chartDist'), {type:'line',
+  data:{labels:[0,1,2,3,4,5],
+    datasets:[{label:'d(t) = 60t',data:[0,60,120,180,240,300],borderColor:'#0891b2',backgroundColor:'#dbf3f8',fill:true,tension:0}]},
+  options: baseOpts()});
+
+new Chart(document.getElementById('chartCuad'), {type:'line',
+  data:{labels:[-1,0,0.5,1,1.5,2,2.5,3,3.5,4,5],
+    datasets:[
+      {label:'f(x) = x² − 4x + 3',data:[8,3,1.25,0,-0.75,-1,-0.75,0,1.25,3,8],borderColor:'#e08a00',backgroundColor:'#fdecc8',fill:true,tension:.35,pointRadius:2},
+      {label:'Raíces (1,0) y (3,0)',data:[null,null,null,0,null,null,null,0,null,null,null],borderColor:'#e0396b',backgroundColor:'#e0396b',pointRadius:7,showLine:false}
+    ]}, options: baseOpts()});
+
+new Chart(document.getElementById('chartLog'), {type:'line',
+  data:{labels:[0.5,1,2,3,4,5,6,7,8,9,10],
+    datasets:[
+      {label:'f(x) = log₂(x)',data:[-1,0,1,1.585,2,2.322,2.585,2.807,3,3.17,3.322],borderColor:'#e0396b',backgroundColor:'#fde2ea',fill:true,tension:.3,pointRadius:2},
+      {label:'Punto (8, 3)',data:[null,null,null,null,null,null,null,null,3,null,null],borderColor:'#0891b2',backgroundColor:'#0891b2',pointRadius:7,showLine:false}
+    ]}, options: baseOpts()});
+
+new Chart(document.getElementById('chartExp'), {type:'line',
+  data:{labels:[0,1,2,3,4,5,6],
+    datasets:[{label:'f(x) = 2ˣ',data:[1,2,4,8,16,32,64],borderColor:'#ff2d78',backgroundColor:'#ffe1ee',fill:true,tension:.3}]},
+  options: baseOpts()});
+</script>
+</body>
+</html>
